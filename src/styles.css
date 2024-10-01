@@ -1,3 +1,11 @@
-p {
-    color: blue;
+#full-page {
+    display: flex;
+    column-gap: 25px;
+}
+#menu {
+    flex: 1;
+    border-right: 1px solid green;
+}
+#main {
+    flex: 3;
 }
