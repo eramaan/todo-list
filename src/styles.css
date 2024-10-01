@@ -8,4 +8,10 @@
 }
 #main {
     flex: 3;
+    display: flex;
+    flex-direction: column;
+}
+#btn-new-todo{
+    background-color: greenyellow;
+    align-self: flex-end;
 }
