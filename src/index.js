@@ -1,14 +1,5 @@
 import "./styles.css";
 
-// remember, if you need to use an image in a js file, you need to import it:
-// import odinImage from "./odin.png";
-// const image = document.createElement("img");
-// image.src = odinImage;
-
-
-
-
-
 
 // object constructor
 function TodoItem(id, title, description, dueDate, priority, done, idList) {
@@ -74,14 +65,81 @@ function PopulateList() {
 
       const accordionBtnEdit = document.createElement('button');
       accordionBtnEdit.textContent = `edit`;
-      accordionBtnEdit.classList.add('btn-edit');
-      accordionBtnEdit.classList.add('btn-open');    
+      accordionBtnEdit.classList.add('btn-edit'); 
+      accordionBtnEdit.setAttribute('id',`${item.id}`);
       panelContent.appendChild(accordionBtnEdit);
       });
 
 }
 
 PopulateList();
+
+
+
+
+// check all edit btn on menu and add the click event logic
+function ClickEdit() {
+  const btnsEdit = document.querySelectorAll('.btn-edit');
+
+  btnsEdit.forEach((button) => {
+
+    button.addEventListener('click', () => {
+      const buttonId = button.id;
+
+      openModal();
+      EditModal(buttonId);
+      ChangeBtnSave();
+      EditOldTodo(buttonId);
+    });
+  });
+
+}
+
+ClickEdit();
+
+
+const modalTitle = document.querySelector(`input#title`);
+const modalDescription = document.querySelector(`input#description`);
+const modalDueDate = document.querySelector(`input#dueDate`);
+const modalPriority = document.querySelector(`input#priority`);
+const modalDone = document.querySelector(`input#done`);
+
+function EditModal(buttonId) {
+  const item = getItemById(buttonId);
+
+  modalTitle.value = item.title || ""; // using || "" so if the field is undefined it gets an empty value
+  modalDescription.value = item.description || "";
+  modalDueDate.value = item.dueDate || "";
+  modalPriority.value = item.priority || "";
+  modalDone.checked = item.done || false;
+
+}
+
+function DeleteOldTodo(buttonId) {
+  const itemIndex = todoItemsArray.findIndex(item => item.id === buttonId);
+  todoItemsArray.splice(itemIndex, 1);
+}
+
+// function to get item corresponding to the ID key from the button
+
+function getItemById(buttonId) {
+  return todoItemsArray.find(item => item.id === buttonId);
+}
+
+
+function ChangeBtnSave() {
+  btnNewTodo.id = "btn-edit-old-todo";
+}
+
+function EmptyModal() {
+  modalTitle.value = "";
+  modalDescription.value = "";
+  modalDueDate.value = "";
+  modalPriority.value = "";
+  modalDone.checked = false;
+}
+
+EmptyModal();
 
 
 
@@ -150,8 +208,8 @@ function PopulateListFromMenu(buttonId) {
 
         const accordionBtnEdit = document.createElement('button');
         accordionBtnEdit.textContent = `edit`;
-        accordionBtnEdit.classList.add('btn-edit');   
-        accordionBtnEdit.classList.add('btn-open');   
+        accordionBtnEdit.classList.add('btn-edit'); 
+        accordionBtnEdit.setAttribute('id',`${item.id}`);  
         panelContent.appendChild(accordionBtnEdit);
     } else {
       //aggiungi cosa succede se la lista è vuota!
@@ -159,6 +217,7 @@ function PopulateListFromMenu(buttonId) {
     });
 
     AccordionLogic();
+    ClickEdit();
 
 }
 
@@ -197,8 +256,21 @@ btnNewTodo.addEventListener("click", function() {
 
   PopulateList();
   AccordionLogic();
+  EmptyModal();
 }
 )
+
+
+// edit an old todo
+function EditOldTodo(buttonId) {
+  const btnEditOldTodo = document.getElementById("btn-edit-old-todo")
+  btnEditOldTodo.addEventListener("click", function() {
+    DeleteOldTodo(buttonId);
+    PopulateList();
+  }
+  )
+}
+
 
 // populate the select
 function PopulateSelect() {
@@ -240,23 +312,26 @@ PopulateSelect();
 
     const modal = document.querySelector(".modal");
     const overlay = document.querySelector(".overlay");
-    const openModalBtns = document.querySelectorAll(".btn-open");
+    const openModalBtn = document.querySelector(".btn-open");
     const closeModalBtn = document.querySelector(".btn-close");
 
     // close modal function
     const closeModal = function () {
       modal.classList.add("hidden");
       overlay.classList.add("hidden");
+      EmptyModal();
     };
 
     // close the modal when the close button and overlay is clicked
     closeModalBtn.addEventListener("click", closeModal);
     overlay.addEventListener("click", closeModal);
+    EmptyModal();
 
     // close modal when the Esc key is pressed
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && !modal.classList.contains("hidden")) {
         closeModal();
+        EmptyModal();
       }
     });
 
@@ -266,6 +341,4 @@ PopulateSelect();
       overlay.classList.remove("hidden");
     };
     // open modal event
-    openModalBtns.forEach((button) => {
-      button.addEventListener("click", openModal);
-    });
+    openModalBtn.addEventListener("click", openModal);
