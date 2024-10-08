@@ -28,9 +28,9 @@ function TodoList(id, title) {
 
 
 // populate some random stuff
-const bread = new TodoItem("0", "bread", "buy the bread", "25 oct", "2", "FALSE", "1")
-const homeworks = new TodoItem("1", "homeworks", "do the homeworks", "28 oct", "3", "FALSE", "2")
-const dog = new TodoItem("2", "walk the dog", "walk the werewolf", "10 oct", "1", "TRUE", "1")
+const bread = new TodoItem("0", "bread", "buy the bread", "25 oct", "2", "FALSE", "0")
+const homeworks = new TodoItem("1", "homeworks", "do the homeworks", "28 oct", "3", "FALSE", "1")
+const dog = new TodoItem("2", "walk the dog", "walk the werewolf", "10 oct", "1", "TRUE", "0")
 
 const work = new TodoList("0", "work hard")
 const play = new TodoList("1", "play harder")
@@ -79,10 +79,6 @@ PopulateList();
 
 
 
-// PopulateList dovrebbe portarsi dietro l'id della lista: se vuoto o nullo li fa vedere tutti, altrimenti filtra solo perl'Id - oppure faccio una funzione diversa che viene richiamata solo dal click sulle liste che ha l'id, e l'altra funzione resta per popolare la prima pagina la prima volta
-
-
-
 // display the lists on the menu
 const projectContainer = document.getElementById("project-container");
 
@@ -94,6 +90,8 @@ function PopulateMenu() {
     const listTitle = document.createElement('button');
     listTitle.classList.add('btn-list');   
     listTitle.textContent = `${index + 1} - ${item.title}`;
+    listTitle.setAttribute('id',`${item.id}`);   
+
     
     projectContainer.appendChild(listTitle);
   
@@ -101,7 +99,57 @@ function PopulateMenu() {
 
 }
 
+// check all lists on menu and add the click event logic
+function ClickMenu() {
+  const btnsList = document.querySelectorAll('.btn-list');
+
+  btnsList.forEach((button) => {
+
+    button.addEventListener('click', () => {
+      console.log(button.id);
+      const buttonId = button.id;
+      PopulateListFromMenu(buttonId);
+    });
+  });
+
+}
+
+
+function PopulateListFromMenu(buttonId) {
+
+  listContainer.innerHTML = "";
+
+  todoItemsArray.forEach((item, index) => {
+    if (buttonId === item.idList) {
+      const accordionTitle = document.createElement('button');
+      accordionTitle.textContent = `${index + 1} - ${item.title}, due for the ${item.dueDate} | priority ${item.priority}`;
+      accordionTitle.classList.add('accordion');   
+      
+      listContainer.appendChild(accordionTitle);
+    
+    
+      const accordionBody = document.createElement('div');
+      accordionBody.classList.add('panel');   
+      accordionBody.setAttribute('id',`${item.id}`);
+      accordionBody.setAttribute('querySelectorId',`item${item.id}`);   
+   
+    
+      listContainer.appendChild(accordionBody);
+    
+    
+        const panelContent = document.querySelector(`.panel[querySelectorId="item${item.id}"]`);
+        const accordionP = document.createElement('p');
+        accordionP.textContent = `${item.description}`;
+        panelContent.appendChild(accordionP);
+    }  
+    });
+
+    AccordionLogic();
+
+}
+
 PopulateMenu();
+ClickMenu();
 
 // create a new list
 const btnNewList = document.getElementById("btn-new-list")
@@ -114,19 +162,35 @@ btnNewList.addEventListener("click", function() {
 }
 )
 
-// accordion
+// create a new todo
+const btnNewTodo = document.getElementById("btn-new-todo")
+btnNewTodo.addEventListener("click", function() {
+  const newTodo = new TodoItem(todoItemsArray.length + 1, listTitle)
+  todoItemsArray.push(newTodo);
+  console.log(newTodo);
+  PopulateList();
 
-let acc = document.getElementsByClassName("accordion");
-let i;
+//sono arrivato qua, tocca fare il todo e salvare le info, con una modalità che riprendi per la modifica?
 
-for (i = 0; i < acc.length; i++) {
-  acc[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var panel = this.nextElementSibling;
-    if (panel.style.maxHeight) {
-      panel.style.maxHeight = null;
-    } else {
-      panel.style.maxHeight = panel.scrollHeight + "px";
-    } 
-  });
 }
+)
+
+// accordion
+function AccordionLogic() {
+  let acc = document.getElementsByClassName("accordion");
+  let i;
+  
+  for (i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var panel = this.nextElementSibling;
+      if (panel.style.maxHeight) {
+        panel.style.maxHeight = null;
+      } else {
+        panel.style.maxHeight = panel.scrollHeight + "px";
+      } 
+    });
+  }
+}
+
+AccordionLogic();
