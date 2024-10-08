@@ -71,8 +71,13 @@ function PopulateList() {
       const accordionP = document.createElement('p');
       accordionP.textContent = `${item.description}`;
       panelContent.appendChild(accordionP);
-  
-    });
+
+      const accordionBtnEdit = document.createElement('button');
+      accordionBtnEdit.textContent = `edit`;
+      accordionBtnEdit.classList.add('btn-edit');
+      accordionBtnEdit.classList.add('btn-open');    
+      panelContent.appendChild(accordionBtnEdit);
+      });
 
 }
 
@@ -142,6 +147,12 @@ function PopulateListFromMenu(buttonId) {
         const accordionP = document.createElement('p');
         accordionP.textContent = `${item.description}`;
         panelContent.appendChild(accordionP);
+
+        const accordionBtnEdit = document.createElement('button');
+        accordionBtnEdit.textContent = `edit`;
+        accordionBtnEdit.classList.add('btn-edit');   
+        accordionBtnEdit.classList.add('btn-open');   
+        panelContent.appendChild(accordionBtnEdit);
     } else {
       //aggiungi cosa succede se la lista è vuota!
     }
@@ -162,6 +173,7 @@ btnNewList.addEventListener("click", function() {
   todoListsArray.push(newList);
   console.log(newList);
   PopulateMenu();
+  ClickMenu();
   PopulateSelect();
 }
 )
@@ -176,11 +188,7 @@ btnNewTodo.addEventListener("click", function() {
   const done = document.getElementById('done').checked;
   const idList = document.getElementById('idList').value;
 
-
-
-  const newTodo = new TodoItem(todoItemsArray.length + 1, title, description, dueDate, priority, done, idList)
-
-
+  const newTodo = new TodoItem(todoItemsArray.length + 1, title, description, dueDate, priority, done, idList);
   todoItemsArray.push(newTodo);
   console.log(newTodo);
   
@@ -232,7 +240,7 @@ PopulateSelect();
 
     const modal = document.querySelector(".modal");
     const overlay = document.querySelector(".overlay");
-    const openModalBtn = document.querySelector(".btn-open");
+    const openModalBtns = document.querySelectorAll(".btn-open");
     const closeModalBtn = document.querySelector(".btn-close");
 
     // close modal function
@@ -258,4 +266,6 @@ PopulateSelect();
       overlay.classList.remove("hidden");
     };
     // open modal event
-    openModalBtn.addEventListener("click", openModal);
+    openModalBtns.forEach((button) => {
+      button.addEventListener("click", openModal);
+    });

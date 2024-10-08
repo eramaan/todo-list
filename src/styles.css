@@ -14,8 +14,12 @@
 .btn-open {
   background-color: greenyellow;
   align-self: flex-end;
+  margin-bottom: 25px;
 }
-
+.btn-edit {
+  background-color: rgb(185, 184, 255);
+  margin-bottom: 25px;
+}
 .btn-list {
     background-color: transparent;;
     color: cornflowerblue;
@@ -23,10 +27,12 @@
     display: block;
     margin: 20px 0;
 }
-
 .btn-list:active, .btn-list:hover {
     color: darkblue;
   }
+button {
+  padding: 10px;
+}
 
 /* accordion */
 .accordion {
