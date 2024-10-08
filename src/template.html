@@ -28,7 +28,7 @@
             <h1>The most epic todo list you'll ever see</h1>
             <p>- so you need to see this one only, please -</p>
             
-            <button id="btn-new-todo">
+            <button class="btn-open">
                 add a todo
             </button>
 
@@ -39,6 +39,25 @@
         </section>
 
     </section>
+
+    <section class="modal hidden">
+        <div class="flex">
+          <button class="btn-close">⨉</button>
+        </div>
+        <div>
+          <h3>Edit the todo</h3>
+        </div>
+
+        <input type="text" id="title" placeholder="write here the todo title"/>
+        <input type="text" id="description" placeholder="write here the todo description"/>
+        <input type="date" id="dueDate" placeholder="write here the todo dueDate"/>
+        <input type="number" id="priority" placeholder="write here the todo priority (1 to 3)" min="1" max="3"/>
+        <span>Has it already been completed?</span><input type="checkbox" id="done"/>
+        <select id="idList"></select>
+        <button id="btn-new-todo">Accept</button>
+    </section>
+      
+    <div class="overlay hidden"></div>
     
 </body>
 </html>
